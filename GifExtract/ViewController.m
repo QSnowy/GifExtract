@@ -7,15 +7,19 @@
 //
 
 #import "ViewController.h"
+#import "QSThumbPreviewView.h"
 #import "QSImagePreviewView.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "SDWebImageGIFCoder.h"
 #import "UIAlertController+Simple.h"
 
-@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, QSImagePreviewDelegate>
+@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, QSImagePreviewDelegate, QSThumbPreviewDelegate>
 
 @property (nonatomic, strong) QSImagePreviewView *previewView;
+@property (nonatomic, strong) QSThumbPreviewView *thumbView;
 @property (nonatomic, assign) NSUInteger currentIndex;
+@property (weak, nonatomic) IBOutlet UIButton *emptyButton;
 
 @end
 
@@ -33,6 +37,14 @@
     [self.view addSubview:previewView];
     _previewView = previewView;
     
+    QSThumbPreviewView *thumbView = [[QSThumbPreviewView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 50) thumbs:nil];
+    thumbView.delegate = self;
+    [self.view addSubview:thumbView];
+    _thumbView = thumbView;
+    
+    self.emptyButton.hidden = NO;
+    [self.view bringSubviewToFront:self.emptyButton];
+    
     
 }
 - (void)viewWillLayoutSubviews {
@@ -40,6 +52,7 @@
     [super viewWillLayoutSubviews];
     _previewView.frame = self.view.bounds;
     [_previewView scrollToIndex:_currentIndex animated:YES];
+    _thumbView.frame = CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 60);
     
 }
 
@@ -49,6 +62,10 @@
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
     [self handleAuthStatus:status];
     
+}
+- (IBAction)pickAction:(id)sender {
+    
+    [self pickPhotoAction:nil];
 }
 
 - (void)handleAuthStatus:(PHAuthorizationStatus)status {
@@ -81,6 +98,14 @@
 - (void)imagePreview:(QSImagePreviewView *)preview didScrollToIndex:(NSInteger)index {
     
     _currentIndex = index;
+    _thumbView.currentIndex = index;
+    
+}
+
+- (void)thumPreview:(QSThumbPreviewView *)view didScrollToIndex:(NSInteger)index {
+    
+    _currentIndex = index;
+    _previewView.currentIndex = index;
     
 }
 // MARK: - ImagePicker Delegate
@@ -105,12 +130,30 @@
         NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
         UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
         [_previewView refreshSources:animationImg.images];
-
+        [_thumbView refreshThumbs:animationImg.images];
+        self.emptyButton.hidden = YES;
         
     } else {
         // Fallback on earlier versions
         NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
-    
+        PHFetchResult *result = [PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil];
+        __weak typeof(QSImagePreviewView *) weakPreview = _previewView;
+        __weak typeof(QSThumbPreviewView *) weakThumbView = _thumbView;
+        
+        [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            if ([obj isKindOfClass:[PHAsset class]]){
+                // 解析phasset，拿到image
+                PHAsset *asset = (PHAsset *)obj;
+                [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+                    
+                    UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
+                    [weakPreview refreshSources:animationImg.images];
+                    [weakThumbView refreshThumbs:animationImg.images];
+                    self.emptyButton.hidden = YES;
+                }];
+            }
+        }];
     }
     
     [picker dismissViewControllerAnimated:YES completion:nil];

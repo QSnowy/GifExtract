@@ -10,7 +10,7 @@
 
 @interface QSThumbPreviewCell : UICollectionViewCell
 
-@property (nonatomic, strong) NSString *imgUrl;
+@property (nonatomic, strong) id thumb;
 
 @end
 

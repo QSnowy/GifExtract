@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0D8265BF2338D08C0DE532DA /* libPods-GifExtract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42DA591264764033DCDB1AFF /* libPods-GifExtract.a */; };
+		80525A6D2244CCDC0078D636 /* emptyview@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 80525A6C2244CCDC0078D636 /* emptyview@2x.png */; };
 		80D2313A224375B700E6B641 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D23139224375B700E6B641 /* AppDelegate.m */; };
 		80D2313D224375B700E6B641 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D2313C224375B700E6B641 /* ViewController.m */; };
 		80D23140224375B700E6B641 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80D2313E224375B700E6B641 /* Main.storyboard */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		42DA591264764033DCDB1AFF /* libPods-GifExtract.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GifExtract.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		80525A6C2244CCDC0078D636 /* emptyview@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "emptyview@2x.png"; sourceTree = "<group>"; };
 		80D23135224375B700E6B641 /* GifExtract.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GifExtract.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D23138224375B700E6B641 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		80D23139224375B700E6B641 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				80D2313B224375B700E6B641 /* ViewController.h */,
 				80D2313C224375B700E6B641 /* ViewController.m */,
 				80D2313E224375B700E6B641 /* Main.storyboard */,
+				80525A6C2244CCDC0078D636 /* emptyview@2x.png */,
 				80D23141224375BB00E6B641 /* Assets.xcassets */,
 				80D23143224375BB00E6B641 /* LaunchScreen.storyboard */,
 				80D23146224375BB00E6B641 /* Info.plist */,
@@ -196,6 +199,7 @@
 				80D23145224375BB00E6B641 /* LaunchScreen.storyboard in Resources */,
 				80D23142224375BB00E6B641 /* Assets.xcassets in Resources */,
 				80D23140224375B700E6B641 /* Main.storyboard in Resources */,
+				80525A6D2244CCDC0078D636 /* emptyview@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

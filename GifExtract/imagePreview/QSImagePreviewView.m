@@ -23,28 +23,6 @@
     
     self = [super initWithFrame:frame];
     if (self){
-        
-        [self setupUI];
-    }
-    return self;
-    
-}
-
-- (instancetype)initWithFrame:(CGRect)frame withImgUrls:(NSArray *)urls{
-    
-    self = [super initWithFrame:frame];
-    if (self){
-        _sourceArray = urls;
-        [self setupUI];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame withImgs:(NSArray <UIImage *>*)imgs {
-    
-    self = [super initWithFrame:frame];
-    if (self){
-        _sourceArray = imgs;
         [self setupUI];
     }
     return self;
@@ -81,15 +59,14 @@
     [self addSubview:collectionView];
     [collectionView registerClass:[QSImagePreviewCell class] forCellWithReuseIdentifier:@"QSImagePreviewCell"];
     _collectionView = collectionView;
-}
 
+}
 
 - (void)refreshSources:(NSArray *)sources {
     
     _sourceArray = sources;
     [_collectionView reloadData];
-    
-    
+
 }
 
 // MARK: - UICollectionView data source

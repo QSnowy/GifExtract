@@ -11,9 +11,7 @@
 
 @implementation QSThumbPreviewCell
 {
-
     UIImageView        *_imgView;
-    CAShapeLayer       *_borderLayer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame{
@@ -30,35 +28,33 @@
 
     // image view
     UIImageView *imgView = [[UIImageView alloc] init];
-//    imgView.contentMode = UIViewContentModeScaleAspectFill;
+    imgView.contentMode = UIViewContentModeScaleAspectFill;
+    imgView.clipsToBounds = YES;
     [self addSubview:imgView];
     _imgView = imgView;
-    
-    // layer
-    CAShapeLayer *borderLayer = [CAShapeLayer layer];
-    borderLayer.lineWidth = 4;
-    borderLayer.fillColor = [UIColor clearColor].CGColor;
-    borderLayer.strokeColor = [UIColor cyanColor].CGColor;
-    UIBezierPath *cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:8];
-    borderLayer.path = cornerPath.CGPath;
-    [self.layer addSublayer:borderLayer];
-    _borderLayer = borderLayer;
-    _borderLayer.hidden = YES;
-    
-    
-    
+
 }
 
-- (void)setImgUrl:(NSString *)imgUrl{
+- (void)setThumb:(id)thumb {
     
-    [_imgView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"ppt_placeholder"]];
-    
+    if ([thumb isKindOfClass:[NSString class]]){
+        
+        [_imgView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:nil];
+        
+    }else if ([thumb isKindOfClass:[UIImage class]]){
+        
+        [_imgView setImage:thumb];
+        
+    }else if ([thumb isKindOfClass:[NSURL class]]){
+        
+        [_imgView sd_setImageWithURL:thumb placeholderImage:nil];
+
+    }
 }
 
 - (void)setSelected:(BOOL)selected{
     
     [super setSelected:selected];
-    _borderLayer.hidden = !selected;
     CGFloat scale = selected ? 1.1 : 1.0;
     [UIView animateWithDuration:0.3f animations:^{
         
@@ -72,13 +68,7 @@
 - (void)layoutSubviews{
     
     [super layoutSubviews];
-    _borderLayer.hidden = !self.selected;
-    _borderLayer.frame = self.bounds;
-    UIBezierPath *cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:8];
-    _borderLayer.path = cornerPath.CGPath;
-    
-    _imgView.frame = CGRectMake(0, 0, self.bounds.size.width - 4, self.bounds.size.height-2);
-    _imgView.center = self.center;
+    _imgView.frame = CGRectMake(2, 2, self.bounds.size.width - 4, self.bounds.size.height - 4);
 
 }
 

@@ -17,7 +17,21 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mCV-gV-jA1">
+                                <rect key="frame" x="31.5" y="194.5" width="312" height="278"/>
+                                <state key="normal" backgroundImage="emptyview.png"/>
+                                <state key="highlighted" backgroundImage="emptyview.png"/>
+                                <connections>
+                                    <action selector="pickAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Ho-D6-65G"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mCV-gV-jA1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2PQ-Ag-4xv"/>
+                            <constraint firstItem="mCV-gV-jA1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="SbK-Nd-Dbi"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="GIF" id="PV2-lh-lmJ">
@@ -28,10 +42,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="emptyButton" destination="mCV-gV-jA1" id="3Fa-LM-Rod"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="479" y="91"/>
+            <point key="canvasLocation" x="477.60000000000002" y="90.404797601199405"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="YDE-Ni-lmr">
@@ -51,4 +68,7 @@
             <point key="canvasLocation" x="-340" y="92"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="emptyview.png" width="312" height="278"/>
+    </resources>
 </document>

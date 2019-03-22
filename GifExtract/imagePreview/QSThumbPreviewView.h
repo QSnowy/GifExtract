@@ -16,9 +16,16 @@
 @property (nonatomic, weak) id <QSThumbPreviewDelegate> delegate;
 @property (nonatomic, assign) NSInteger currentIndex;
 
-- (instancetype)initWithFrame:(CGRect)frame imgUrls:(NSArray *)imgUrls;
+/**
+ 创建缩略图预览
 
-- (void)refreshImgUrls:(NSArray *)imgUrls;
+ @param frame rect for view
+ @param thumbs 缩略图数组 url或者image
+ @return instance of view
+ */
+- (instancetype)initWithFrame:(CGRect)frame thumbs:(NSArray *)thumbs;
+
+- (void)refreshThumbs:(NSArray *)thumbs;
 
 @end
 
