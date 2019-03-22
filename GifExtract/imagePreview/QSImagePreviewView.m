@@ -71,7 +71,7 @@
     _layout = layout;
     
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
-    collectionView.backgroundColor = [UIColor blackColor];
+    collectionView.backgroundColor = [UIColor whiteColor];
     collectionView.dataSource = self;
     collectionView.delegate = self;
     collectionView.pagingEnabled = YES;
@@ -151,6 +151,9 @@
     
     [super layoutSubviews];
     _collectionView.frame = self.bounds;
+    _layout.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+    [_layout invalidateLayout];
+    
 }
 
 // MARK: - public methods

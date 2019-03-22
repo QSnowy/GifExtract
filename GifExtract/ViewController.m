@@ -9,11 +9,13 @@
 #import "ViewController.h"
 #import "QSImagePreviewView.h"
 #import <Photos/Photos.h>
+#import "SDWebImageGIFCoder.h"
 #import "UIAlertController+Simple.h"
 
-@interface ViewController () <UIImagePickerControllerDelegate>
+@interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, QSImagePreviewDelegate>
 
 @property (nonatomic, strong) QSImagePreviewView *previewView;
+@property (nonatomic, assign) NSUInteger currentIndex;
 
 @end
 
@@ -27,6 +29,7 @@
 - (void)setupUI {
     
     QSImagePreviewView *previewView = [[QSImagePreviewView alloc] initWithFrame:self.view.bounds withSources:nil];
+    previewView.delegate = self;
     [self.view addSubview:previewView];
     _previewView = previewView;
     
@@ -36,6 +39,8 @@
     
     [super viewWillLayoutSubviews];
     _previewView.frame = self.view.bounds;
+    [_previewView scrollToIndex:_currentIndex animated:YES];
+    
 }
 
 
@@ -64,16 +69,20 @@
         }
         
         UIImagePickerController *pickerVC = [[UIImagePickerController alloc] init];
+        pickerVC.delegate = self;
         [self presentViewController:pickerVC animated:YES completion:nil];
         return;
     }
     
     [self showSimpleAlertWithMsg:@"给我相册权限啊。。。"];
     
+}
+// MARK: - qspreview delegate
+- (void)imagePreview:(QSImagePreviewView *)preview didScrollToIndex:(NSInteger)index {
     
+    _currentIndex = index;
     
 }
-
 // MARK: - ImagePicker Delegate
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     
@@ -83,14 +92,29 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
     
     
+    // 这个获取到的image是静态图，需要根据它的fileURL获取原始数据
     UIImage *originImg = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
     if (!originImg){
         [self showSimpleAlertWithMsg:@"图片是空的"];
         return;
     }
+    if (@available(iOS 11.0, *)) {
+        
+        NSURL *imageURL = [info objectForKey:UIImagePickerControllerImageURL];
+        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+        UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
+        [_previewView refreshSources:animationImg.images];
+
+        
+    } else {
+        // Fallback on earlier versions
+        NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
     
-    [_previewView refreshSources:@[originImg]];
+    }
     
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    [_previewView refreshSources:originImg.images];
     
 }
 

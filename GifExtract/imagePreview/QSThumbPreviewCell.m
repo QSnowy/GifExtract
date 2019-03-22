@@ -31,15 +31,7 @@
     // image view
     UIImageView *imgView = [[UIImageView alloc] init];
 //    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    
     [self addSubview:imgView];
-    
-    [imgView mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.edges.equalTo(@0).with.inset(2);
-        
-    }];
-    
     _imgView = imgView;
     
     // layer
@@ -84,6 +76,9 @@
     _borderLayer.frame = self.bounds;
     UIBezierPath *cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:8];
     _borderLayer.path = cornerPath.CGPath;
+    
+    _imgView.frame = CGRectMake(0, 0, self.bounds.size.width - 4, self.bounds.size.height-2);
+    _imgView.center = self.center;
 
 }
 
