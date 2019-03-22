@@ -56,7 +56,6 @@
     
 }
 
-
 - (IBAction)pickPhotoAction:(UIBarButtonItem *)sender {
     
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
@@ -124,21 +123,21 @@
         [self showSimpleAlertWithMsg:@"图片是空的"];
         return;
     }
+    
+    NSURL *imageURL;
+    NSData *imageData;
+    
     if (@available(iOS 11.0, *)) {
         
-        NSURL *imageURL = [info objectForKey:UIImagePickerControllerImageURL];
-        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-        UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
-        [_previewView refreshSources:animationImg.images];
-        [_thumbView refreshThumbs:animationImg.images];
-        self.emptyButton.hidden = YES;
+        imageURL = [info objectForKey:UIImagePickerControllerImageURL];
+        imageData = [NSData dataWithContentsOfURL:imageURL];
+        [self handlePickedImageData:imageData];
         
     } else {
+        
         // Fallback on earlier versions
-        NSURL *imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+        imageURL = [info objectForKey:UIImagePickerControllerReferenceURL];
         PHFetchResult *result = [PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil];
-        __weak typeof(QSImagePreviewView *) weakPreview = _previewView;
-        __weak typeof(QSThumbPreviewView *) weakThumbView = _thumbView;
         
         [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -146,18 +145,14 @@
                 // 解析phasset，拿到image
                 PHAsset *asset = (PHAsset *)obj;
                 [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-                    
-                    UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
-                    [weakPreview refreshSources:animationImg.images];
-                    [weakThumbView refreshThumbs:animationImg.images];
-                    self.emptyButton.hidden = YES;
+                    // 处理图片数据
+                    [self handlePickedImageData:imageData];
                 }];
             }
         }];
     }
     
     [picker dismissViewControllerAnimated:YES completion:nil];
-    [_previewView refreshSources:originImg.images];
     
 }
 
@@ -166,6 +161,25 @@
     UIAlertController *alertCtrl = [UIAlertController simpleAlertWithTitle:@"提示" msg:msg];
     [self presentViewController:alertCtrl animated:YES completion:nil];
     
+}
+
+- (void)handlePickedImageData:(NSData *)imageData {
+    
+    UIImage *animationImg = [[SDWebImageGIFCoder sharedCoder] decodedImageWithData:imageData];
+    if (animationImg.images.count == 0){
+        
+        [self showSimpleAlertWithMsg:@"老弟，怎么肥事，这个不是GIF啊！！"];
+        [_previewView refreshSources:@[animationImg]];
+        [_thumbView refreshThumbs:@[animationImg]];
+        
+    }else {
+        
+        [_previewView refreshSources:animationImg.images];
+        [_thumbView refreshThumbs:animationImg.images];
+    }
+    
+    self.emptyButton.hidden = YES;
+
 }
 
 @end
